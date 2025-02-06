@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Gift</title>
+    <style>
+        :root {
+            --neon-green: #4ecca3;
+            --neon-glow: 0 0 10px #4ecca3, 0 0 20px #4ecca3, 0 0 30px #4ecca3;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a1f1c 0%, #1a2928 50%, #0a1f1c 100%);
+            color: var(--neon-green);
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #ben10Video {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 15px;
+            box-shadow: var(--neon-glow);
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #jokeContainer {
+            background: rgba(10, 31, 28, 0.9);
+            border-radius: 15px;
+            box-shadow: var(--neon-glow);
+            max-width: 90%;
+            margin: 20px auto;
+            padding: 20px;
+            opacity: 0;
+            transform: translateZ(-100px);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #joke {
+            color: white;
+            font-size: 1.3em;
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        #butterflyPrompt {
+            cursor: pointer;
+            color: var(--neon-green);
+            font-size: 1.2em;
+            text-shadow: var(--neon-glow);
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.5s ease;
+        }
+
+        #butterfly {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            cursor: pointer;
+            transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 30;
+        }
+
+        #finalMessage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(10, 31, 28, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--neon-glow);
+            width: 90%;
+            max-width: 500px;
+            z-index: 40;
+        }
+
+        #rose {
+            max-width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .hidden {
+            display: none !important;
+            opacity: 0 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <video id="ben10Video" autoplay muted playsinline>
+            <source src="images/ben.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <div id="jokeContainer" class="hidden">
+            <h2>Here's a dad joke for you:</h2>
+            <p id="joke"></p>
+        </div>
+        
+        <div id="butterflyPrompt" class="hidden">
+            Did you laugh?? okay never mind catch the butterfly now
+        </div>
+    </div>
+    
+    <img id="butterfly" src="images/butterfly.gif" alt="Butterfly" class="hidden">
+    
+    <div id="finalMessage" class="hidden">
+        <img id="rose" src="images/rose.webp" alt="Rose">
+        <p> happy rose day mr.barua :) </p>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="images/Tose-Naina-Lage-Piya-Flute-Ringtone.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const dadJokes = [
+            "Why don't eggs tell jokes? They'd crack up!",
+            "What do you call a bear with no teeth? A gummy bear!",
+            "Why don't skeletons fight each other? They don't have the guts!",
+            "What do you call a fake noodle? An impasta!"
+        ];
+
+        const ben10Video = document.getElementById('ben10Video');
+        
+        ben10Video.addEventListener('ended', () => {
+            ben10Video.classList.add('hidden');
+            const jokeContainer = document.getElementById('jokeContainer');
+            jokeContainer.classList.remove('hidden');
+            setTimeout(() => {
+                jokeContainer.style.opacity = '1';
+                jokeContainer.style.transform = 'translateZ(0)';
+            }, 100);
+            document.getElementById('joke').textContent = dadJokes[Math.floor(Math.random() * dadJokes.length)];
+            
+            setTimeout(() => {
+                const butterflyPrompt = document.getElementById('butterflyPrompt');
+                butterflyPrompt.classList.remove('hidden');
+                setTimeout(() => butterflyPrompt.style.opacity = '1', 100);
+            }, 2000);
+        });
+
+        document.getElementById('butterflyPrompt').addEventListener('click', () => {
+            const butterfly = document.getElementById('butterfly');
+            butterfly.classList.remove('hidden');
+            setTimeout(() => butterfly.style.bottom = '20px', 100);
+        });
+
+        document.getElementById('butterfly').addEventListener('click', () => {
+            const finalMessage = document.getElementById('finalMessage');
+            finalMessage.classList.remove('hidden');
+            setTimeout(() => {
+                finalMessage.style.opacity = '1';
+                finalMessage.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 100);
+            document.getElementById('bgMusic').play();
+        });
+
+        // Handle music autoplay restrictions
+        document.body.addEventListener('click', () => {
+            document.getElementById('bgMusic').play().catch(() => {
+                console.log('Autoplay prevented');
+            });
+        }, { once: true });
+    </script>
+</body>
+</html>
